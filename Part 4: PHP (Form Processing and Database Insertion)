@@ -1,0 +1,34 @@
+<?php
+// process-form.php
+
+// Database connection
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "educational_institution";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Form submission logic
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $name = htmlspecialchars($_POST['name']);
+    $email = htmlspecialchars($_POST['email']);
+    $message = htmlspecialchars($_POST['message']);
+
+    // Prepare and bind statement to prevent SQL injection
+    $stmt = $conn->prepare("INSERT INTO contacts (name, email, message) VALUES (?, ?, ?)");
+    $stmt->bind_param("sss", $name, $email, $message);
+
+    if ($stmt->execute()) {
+        echo "Thank you for contacting us!";
+    } else {
+        echo "Error: " . $stmt->error;
+    }
+
+    $stmt->
